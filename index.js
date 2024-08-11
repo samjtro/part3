@@ -47,18 +47,18 @@ app.delete('/api/persons/:id', (req, resp) => {
     resp.status(204).end()
 })
 
-const generateId = () => {
-    return String(Math.trunc(Math.random() * 100000))
-}
+const generateId = () => String(Math.trunc(Math.random() * 100000))
 
+// untested
 app.post('/api/persons', (req, resp) => {
-    const person = {
-        "id": generateId(),
-        "name": "",
-        "number": "",
+    const person = req.body
+    person.id = generateId()
+    if (!person.name) || (!person.number) {
+        resp.status(404).end()
+    } else {
+        persons = persons.concat(person)
+        resp.json(person)
     }
-    persons = persons.concat(person)
-    resp.json(person)
 })
 
 const PORT = 3001
