@@ -26,6 +26,14 @@ let persons = [
     }
 ]
 
+app.get('/info', (req, resp) => {
+    resp.send(`
+<p>phonebook has ${persons.length} entries</p>
+<br/>
+<p>${new Date().toLocaleString()}</p>
+`)
+})
+
 app.get('/api/persons', (req, resp) => {
     resp.json(persons)
 })
