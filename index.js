@@ -47,6 +47,20 @@ app.delete('/api/persons/:id', (req, resp) => {
     resp.status(204).end()
 })
 
+const generateId = () => {
+    return String(Math.trunc(Math.random() * 100000))
+}
+
+app.post('/api/persons', (req, resp) => {
+    const person = {
+        "id": generateId(),
+        "name": "",
+        "number": "",
+    }
+    persons = persons.concat(person)
+    resp.json(person)
+})
+
 const PORT = 3001
 
 app.listen(PORT, () => {
