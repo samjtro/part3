@@ -1,0 +1,16 @@
+.notif {
+    background: lightgrey;
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.notif.error {
+    color: red;
+}
+
+.notif.alert {
+    color: green;
+}
