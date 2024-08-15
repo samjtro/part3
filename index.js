@@ -1,6 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
 const Entry = require('./models/entry')
+const mongoose = require('mongoose')
 var util = require("util")
 var app = express()
 
