@@ -1,7 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
 const Entry = require('./models/entry')
-const mongoose = require('mongoose')
 var util = require("util")
 var app = express()
 
@@ -11,11 +10,6 @@ morgan.token('body', (req, res) => {
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(express.json())
 app.use(express.static('dist'))
-
-const handle = ({err}) => {
-    console.log('[err] invalid request - ')
-    mongoose.connection.close()
-}
 
 app.get('/info', (req, resp) => {
     resp.send(`
@@ -31,37 +25,63 @@ app.get('/api/persons', (req, resp) => {
         .then(n => {
             resp.json(n)
         })
-        .catch(err => handle(err))
 })
 
-app.get('/api/persons/:id', (req, resp) => {
+app.get('/api/persons/:id', (req, resp, next) => {
     Entry
         .findById(req.params.id)
         .then(r => {
             resp.json(r)
         })
-        .catch(err => handle(err))
+        .catch(err => next(err))
 })
 
-app.delete('/api/persons/:id', (req, resp) => {
-    persons = persons.filter(p => p.id !== req.params.id)
-    resp.status(204).end()
+app.delete('/api/persons/:id', (req, resp, next) => {
+    Entry
+        .findByIdAndDelete(req.params.id)
+        .then(r => {
+            resp.status(204).end()
+        })
+        .catch(err => next(err))
 })
 
 const generateId = () => String(Math.trunc(Math.random() * 100000))
 
-app.post('/api/persons', (req, resp) => {
+app.post('/api/persons', (req, resp, next) => {
     const entry = new Entry({
         name: req.body.name,
         number: req.body.number,
     })
-    entry
+    Entry
         .save()
         .then(r => {
             resp.json(r)
         })
-        .catch(err => handle(err))
+        .catch(err => next(err))
 })
+
+app.put('/api/persons/:id', (req, resp, next) => {
+    const person = {
+        name: req.body.name,
+        number: req.body.number,
+    }
+    Entry
+        .findByIdAndUpdate(req.params.id, person, {new:true})
+        .then(r => resp.json(r))
+        .catch(err => next(err))
+})
+
+const errorHandler = (error, req, resp, next) => {
+    console.error(err.message)
+
+    if (err.name === 'CastError') {
+        return resp.status(400).send({error: 'malformatted id'})
+    }
+
+    next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 
