@@ -101,16 +101,16 @@ const App = () => {
             event.preventDefault()
             db
                 .create({
-                id: String(Number(persons[persons.length-1].id) + 1),
-                name: newName,
-                phone: newPhone
+                    id: String(Number(persons[persons.length-1].id) + 1),
+                    name: newName,
+                    number: newPhone
                 })
                 .then(response => {
-                setPersons(persons.concat(response))
-                setFilteredPersons(filteredPersons.concat(response).filter(p => p.name.toLowerCase().includes(filterValue.toLowerCase())))
-                setIsError(false)
-                setNotifMessage(`Created ${response.name}: ${response.phone}`)
-                setTimeout(() => {setNotifMessage(null)}, 5000)
+                    setPersons(persons.concat(response))
+                    setFilteredPersons(filteredPersons.concat(response).filter(p => p.name.toLowerCase().includes(filterValue.toLowerCase())))
+                    setIsError(false)
+                    setNotifMessage(`Created ${response.name}: ${response.phone}`)
+                    setTimeout(() => {setNotifMessage(null)}, 5000)
                 })
             setNewName('')
             setNewPhone('')
@@ -120,7 +120,7 @@ const App = () => {
                 .update(persons[index].id, {
                     id: persons[index].id,
                     name: persons[index].name,
-                    phone: newPhone
+                    number: newPhone
                 })
                 .then(response => {
                     setPersons(persons.map(p => p.id !== id ? p : response))
