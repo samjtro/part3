@@ -5,8 +5,14 @@ mongoose.set('strictQuery',false)
 mongoose.connect(process.env.MONGODB_URI)
 
 const entrySchema = new mongoose.Schema({
-    name: String,
-    number: String,
+    name: {
+        type: String,
+        required: true
+    },
+    number: {
+        type: String,
+        required: true
+    },
 })
 entrySchema.set('toJSON', {
     transform: (document, returnedObject) => {
