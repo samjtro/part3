@@ -52,7 +52,7 @@ app.post('/api/persons', (req, resp, next) => {
         name: req.body.name,
         number: req.body.number,
     })
-    Entry
+    entry
         .save()
         .then(r => {
             resp.json(r)
@@ -66,12 +66,12 @@ app.put('/api/persons/:id', (req, resp, next) => {
         number: req.body.number,
     }
     Entry
-        .findByIdAndUpdate(req.params.id, person, {new:true})
+        .findByIdAndUpdate(req.params.id, person, {new:true, runValidators: true, context: 'query'})
         .then(r => resp.json(r))
         .catch(err => next(err))
 })
 
-const errorHandler = (error, req, resp, next) => {
+const errorHandler = (err, req, resp, next) => {
     console.error(err.message)
 
     if (err.name === 'CastError') {
@@ -80,7 +80,7 @@ const errorHandler = (error, req, resp, next) => {
         return resp.status(400).json({error: err.message})
     }
 
-    next(error)
+    next(err)
 }
 
 app.use(errorHandler)

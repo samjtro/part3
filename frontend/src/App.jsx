@@ -109,7 +109,12 @@ const App = () => {
                     setPersons(persons.concat(response))
                     setFilteredPersons(filteredPersons.concat(response).filter(p => p.name.toLowerCase().includes(filterValue.toLowerCase())))
                     setIsError(false)
-                    setNotifMessage(`Created ${response.name}: ${response.phone}`)
+                    setNotifMessage(`Created ${response.name}: ${response.number}`)
+                    setTimeout(() => {setNotifMessage(null)}, 5000)
+                })
+                .catch(err => {
+                    setIsError(true)
+                    setNotifMessage(`Person validation error: ${err.response.data.error}`)
                     setTimeout(() => {setNotifMessage(null)}, 5000)
                 })
             setNewName('')
@@ -142,7 +147,7 @@ const App = () => {
                 .deleteItem(event.target.id)
                 .then(() => {
                 setIsError(false)
-                setNotifMessage(`Deleted ${person[0].name}: ${person[0].phone}`)
+                setNotifMessage(`Deleted ${person[0].name}: ${person[0].number}`)
                 setTimeout(() => {setNotifMessage(null)}, 5000)
                 })
             setPersons(persons.filter(person => person.id !== event.target.id))

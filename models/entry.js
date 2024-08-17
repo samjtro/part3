@@ -7,6 +7,7 @@ mongoose.connect(process.env.MONGODB_URI)
 const entrySchema = new mongoose.Schema({
     name: {
         type: String,
+        minLength: 3,
         required: true
     },
     number: {
